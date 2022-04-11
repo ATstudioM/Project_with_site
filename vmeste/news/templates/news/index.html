@@ -1,0 +1,17 @@
+{% extends 'news/base.html' %}
+
+{% block content %}
+<ul>
+    {% for i in posts %}
+    <li>
+        <h2>{{i.title}}</h2>
+        {% autoescape on %}
+        <p>{{i.content|linebreaks|truncatewords:100}}</p>
+        {% endautoescape %}
+        <div class="clear"></div>
+        <p class="link-read-post"><a href="{% url 'news' i.pk %}">Читать полностью</a></p>
+    </li>
+    {% endfor %}
+</ul>
+
+{% endblock %}
