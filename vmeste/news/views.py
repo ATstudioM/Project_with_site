@@ -30,7 +30,7 @@ def show_news(request, post_slug):
         'post': post,
         'menu': menu,
         'title': post.title,
-        'cat_selected': post.cat_slug,
+        'cat_selected': post.cat_id,
     }
 
     return render(request, 'news/post.html', context=context)
