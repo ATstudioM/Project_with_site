@@ -1,5 +1,4 @@
 {% extends 'news/base.html' %}
-
 {% block css %}
 <!-- Есть беды с импортом CSS, выкрутился вот так -->
 <style>
@@ -55,28 +54,24 @@ h4 {
 }
 h3 {
     font-size: 20pt;
+    margin-right: 2.5%;
+    margin-left: 2.5%;
 }
+p {
+    margin-right: 2.5%;
+    margin-left: 2.5%;
+   }
 </style>
 {% endblock %}
+
 {% block content %}
-<ul>
-    {% for i in posts %}
-    <li>
-        <p><h4>{{i.cat}}</h4>
-        <h3 class="text-decoration-underline"><mark>{{i.title}}</mark></h3>
-        {% if i.image %}
-        <p><img src="{{i.image.url}}" width=20% height=20%></p>
-        {% endif %}
-        {% autoescape on %}
-        <p><h5>{{i.content|linebreaks|truncatewords:100}}</h5>
-        {% endautoescape %}
-        <div class="clear"></div>
-        <p><mark>{{i.time_update|date:"d-m-Y H:i:s"}}</mark></p>
-        <p class="link-read-post"><div class="container-3"><a class="act" href="{{ i.get_absolute_url }}">Читать полностью</a></div>
-        <p></p>
-    </li>
-    {% endfor %}
-</ul>
+<h3 class="text-decoration-underline"><mark>{{post.title}}</mark></h3>
 
+{% if post.image %}
+<p><img src="{{post.image.url}}" width=30% height=30%></p>
+{% endif %}
 
+{{post.content|linebreaks}}
+
+<p><mark>{{post.time_update|date:"d-m-Y H:i:s"}}</mark></p>
 {% endblock %}

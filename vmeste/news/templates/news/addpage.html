@@ -1,0 +1,53 @@
+{% extends 'news/base.html' %}
+
+{% block css %}
+<style>
+form {
+    margin-right: 2.5%;
+    margin-left: 2.5%;
+   }
+h1 {
+    margin-right: 2.5%;
+    margin-left: 2.5%;
+   }
+.form-input {
+    width: 300px;
+    font-size: 16px;
+}
+
+.form-label {
+    display: inline-block;
+    min-width: 150px;
+    vertical-align: top;
+}
+
+.form-error ul {
+    list-style: none;
+    padding: 0;
+    color: #CC0000;
+}
+
+.form-button {
+    min-width: 200px;
+    font-size: 16px;
+}
+</style>
+{% endblock %}
+{% block content %}
+<h1>{{title}}</h1>
+
+<form action="{% url 'add_news' %}" method="post">
+    {% csrf_token %}
+
+    <div class="form-error">{{ form.non_field_errors }}</div>
+
+{% for f in form %}
+<p><label class="form-label" for="{{ f.id_for_label }}">{{f.label}}: </label>{{ f }}</p>
+<div class="form-error">{{ f.errors }}</div>
+{% endfor %}
+
+
+    <button type="submit">Добавить</button>
+</form>
+
+{% endblock %}
