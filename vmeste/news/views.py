@@ -46,11 +46,11 @@ def new(request, newsid):
 
 def add_news(request):
     if request.method == 'POST':
-        form = AddPost(request.POST)
+        form = AddPost(request.POST, request.FILES)
         if form.is_valid():
-            print(form.cleaned_data)
+            #print(form.cleaned_data)
             try:
-                News.objects.create(**form.cleaned_data)
+                form.save()
                 return redirect('home')
             except:
                 form.add_error(None, 'Ошибка добавления поста')

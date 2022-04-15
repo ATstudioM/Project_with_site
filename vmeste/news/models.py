@@ -6,7 +6,7 @@ from django.urls import reverse
 
 
 class News(models.Model):
-    title = models.CharField(max_length=150, verbose_name='Название')
+    title = models.CharField(max_length=201, verbose_name='Название')
     slug = models.SlugField(max_length=255, unique=True, db_index=True, verbose_name='URL')
     content = models.TextField(blank=True, verbose_name='Текст')
     image = models.ImageField(upload_to='image/%Y/%m/%d/', blank=True, verbose_name='Картинка')
