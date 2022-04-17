@@ -1,8 +1,11 @@
 {% extends 'news/base.html' %}
-
 {% block css %}
 <style>
-form {
+button {
+    margin-right: 2.5%;
+    margin-left: 2.5%;
+}
+   form {
     margin-right: 2.5%;
     margin-left: 2.5%;
    }
@@ -31,27 +34,18 @@ h1 {
     min-width: 200px;
     font-size: 16px;
 }
-button {
-    margin-right: 2.5%;
-    margin-left: 2.5%;
-   }
 </style>
 {% endblock %}
 {% block content %}
-<h1>{{title}}</h1>
+<h3>{{title}}</h3>
 
-<form action="{% url 'add_news' %}" method="post" enctype="multipart/form-data">
+<form method="post">
     {% csrf_token %}
-
-    <div class="form-error">{{ form.non_field_errors }}</div>
-
-{% for f in form %}
-<p><label class="form-label" for="{{ f.id_for_label }}">{{f.label}}: </label>{{ f }}</p>
-<div class="form-error">{{ f.errors }}</div>
-{% endfor %}
-
-
-    <button type="submit">Добавить</button>
+        <div class="form-error">{{ form.non_field_errors }}</div>
+            {% for f in form %}
+                <p><label class="form-label" for="{{ f.id_for_label }}">{{f.label}}: </label>{{ f }}</p>
+                <div class="form-error">{{ f.errors }}</div>
+            {% endfor %}
+        <button type="submit">Войти</button>
 </form>
-
 {% endblock %}

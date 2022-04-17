@@ -1,66 +1,17 @@
 {% extends 'news/base.html' %}
 
 {% block css %}
-<!-- Есть беды с импортом CSS, выкрутился вот так -->
 <style>
-a {
-  outline: none;
-  text-decoration: none;
-  padding: 2px 1px 0;
-  color: #87CEEB;
-}
-
-a:link {
-  color: #CD853F;
-}
-
-a:visited {
-  color: #CD853F;
-}
-
-a:focus {
-  border-bottom: 1px solid;
-  background: #bcbcf2;
-  color: #CD853F;
-}
-
-a:hover {
-  border-bottom: 1px solid;
-  background: #bcbcf2;
-  color: #CD853F;
-}
-
-a:active {
-  background: #bcbcf2;
-  color: #FFEFD5;
-}
-
 mark {
-  background-color: #9191ea;
+  background-color: rgba(106, 90, 205, 0.8);
   color: white;
 }
-
-h5 {
-    background: rgba(365, 365, 365, 0.9);
-    font-size: 13pt;
-}
-A.act{
-    background: rgba(365, 365, 365, 0.9);
-}
-P.ac{
-    background: rgba(365, 365, 365, 0.9);
-}
-h4 {
-    font-size: 16pt;
-}
-h3 {
-    font-size: 20pt;
-}
 </style>
+<!-- Есть беды с импортом CSS, выкрутился вот так -->
 {% endblock %}
 {% block content %}
 <ul>
-    {% for i in posts %}
+    {% for i in object_list %}
     <li>
         <p><h4>{{i.cat}}</h4>
         <h3 class="text-decoration-underline"><mark>{{i.title}}</mark></h3>
@@ -72,7 +23,7 @@ h3 {
         {% endautoescape %}
         <div class="clear"></div>
         <p><mark>{{i.time_update|date:"d-m-Y H:i:s"}}</mark></p>
-        <p class="link-read-post"><div class="container-3"><a class="act" href="{{ i.get_absolute_url }}">Читать полностью</a></div>
+        <p><div><a class="act" href="{{ i.get_absolute_url }}">Читать полностью</a></div>
         <p></p>
     </li>
     {% endfor %}

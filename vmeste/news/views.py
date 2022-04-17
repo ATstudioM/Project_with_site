@@ -1,5 +1,10 @@
+from django.contrib.auth import logout, login
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.views import LoginView
 from django.http import HttpResponseNotFound, HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse_lazy
+from django.views.generic import ListView, DetailView, CreateView
 
 from .forms import *
 from .models import *
@@ -9,31 +14,44 @@ from .models import *
 menu = [{'title': "О сайте",
          'url_name': 'about'},
         {'title': "Добавить статью",
-         'url_name': 'add_news'},
-        {'title': "Войти",
-         'url_name': 'login'}
+         'url_name': 'add_news'}
 ]
 
+class NewsTime(ListView):
+    paginate_by = 5
+    model = News
+    template_name = 'news/index.html'
 
-def index(request):
-    posts = News.objects.all()
-    tags = {'posts': posts,
-            'menu': menu,
-            'title': 'Главная страница',
-            'cat_selected': 0}
-    return render(request, 'news/index.html', context=tags)
 
-def show_news(request, post_slug):
-    post = get_object_or_404(News, slug=post_slug)
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['menu'] = menu
+        context['title'] = 'Главная страница'
+        context['cat_selected'] = 0
+        return context
 
-    context = {
-        'post': post,
-        'menu': menu,
-        'title': post.title,
-        'cat_selected': post.cat_id,
-    }
+    def get_queryset(self):
+        return News.objects.filter(is_published=True)
 
-    return render(request, 'news/post.html', context=context)
+#def index(request):
+#    posts = News.objects.all()
+ #   tags = {'posts': posts,
+  #          'menu': menu,
+   #         'title': 'Главная страница',
+    #        'cat_selected': 0}
+    # return render(request, 'news/index.html', context=tags)
+
+class ShowNews(DetailView):
+    model = News
+    template_name = 'news/post.html'
+    slug_url_kwarg = 'post_slug'
+    context_object_name = 'post'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['menu'] = menu
+        context['title'] = 'Главная страница'
+        return context
 
 def about(request):
     return render(request, 'news/about.html', {'title': 'О сайте'})
@@ -44,34 +62,69 @@ def new(request, newsid):
         return redirect('https://bubble.ru/')
 
 
-def add_news(request):
-    if request.method == 'POST':
-        form = AddPost(request.POST, request.FILES)
-        if form.is_valid():
-            #print(form.cleaned_data)
-            try:
-                form.save()
-                return redirect('home')
-            except:
-                form.add_error(None, 'Ошибка добавления поста')
+class AddNews(CreateView):
+    form_class = AddPost
+    template_name = 'news/addpage.html'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['menu'] = menu
+        context['title'] = 'Добавление поста'
+        return context
+
 #БЕДЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫ
-    else:
-        form = AddPost()
-    return render(request, 'news/addpage.html', {'form': form, 'menu': menu, 'title': 'Добавление поста'})
-
-
-def login(request):
-    return HttpResponse('Типо регистрация')
-
 
 def pageNotFound(requests, exception):
     return HttpResponseNotFound('<p>Страница не найдена</p>')
 
 
-def show_category(request, cat_id):
-    posts = News.objects.filter(cat_id=cat_id)
-    tags = {'posts': posts,
-            'menu': menu,
-            'title': 'Тема',
-            'cat_selected': cat_id}
-    return render(request, 'news/index.html', context=tags)
+class NewsCategory(ListView):
+    model = News
+    paginate_by = 5
+    template_name = 'news/index.html'
+    context_object_name = 'posts'
+    allow_empty = False
+
+    def get_queryset(self):
+        return News.objects.filter(cat__slug=self.kwargs['cat_slug'], is_published=True)
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = str(context['posts'][0].cat)
+        context['menu'] = menu
+        context['cat_selected'] = context['posts'][0].cat_id
+        return context
+
+class RegisterUser(CreateView):
+    form_class = RegisterUser
+    template_name = 'news/register.html'
+    success_url = reverse_lazy('login')
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Регистрация'
+        context['menu'] = menu
+        return context
+
+    def form_valid(self, form):
+        user = form.save()
+        login(self.request, user)
+        return redirect('home')
+
+
+class LoginUser(LoginView):
+    form_class = LoginingUser
+    template_name = 'news/login.html'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Вход'
+        context['menu'] = menu
+        return context
+
+    def get_success_url(self):
+        return reverse_lazy('home')
+
+def logout_user(request):
+    logout(request)
+    return redirect('home')
