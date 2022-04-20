@@ -29,12 +29,10 @@ a:active {
   background: #bcbcf2;
   color: #FFEFD5;
 }
-
 mark {
-  background-color: yellow;
+  background-color: rgba(106, 90, 205, 0.8);
   color: white;
 }
-
 h5 {
     font-size: 13pt;
 }
@@ -71,10 +69,6 @@ p {
 .list-pages ul li {
 	display: inline-block;
 	margin: 0 20px 0 0;
-}
-mark {
-  background-color: rgba(106, 90, 205, 0.8);
-  color: white;
 }
 form {
     margin-right: 2.5%;

@@ -35,11 +35,15 @@ button {
     margin-right: 2.5%;
     margin-left: 2.5%;
    }
+mark {
+  background-color: rgba(106, 90, 205, 0.8);
+  color: white;
+}
 </style>
 {% endblock %}
 {% block content %}
 <h1>{{title}}</h1>
-
+{% if request.user.is_authenticated %}
 <form action="{% url 'add_news' %}" method="post" enctype="multipart/form-data">
     {% csrf_token %}
 
@@ -49,9 +53,11 @@ button {
 <p><label class="form-label" for="{{ f.id_for_label }}">{{f.label}}: </label>{{ f }}</p>
 <div class="form-error">{{ f.errors }}</div>
 {% endfor %}
-
-
-    <button type="submit">Добавить</button>
+        <button type="submit">Добавить</button>
 </form>
+{% else %}
+<h3><mark>Предлагаю сначала войти в аккаунт!</mark></h3>
+{% endif %}
+
 
 {% endblock %}
