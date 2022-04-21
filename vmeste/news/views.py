@@ -1,8 +1,7 @@
 from django.contrib.auth import logout, login
-from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.views import LoginView
-from django.http import HttpResponseNotFound, HttpResponse
-from django.shortcuts import render, redirect, get_object_or_404
+from django.http import HttpResponseNotFound
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView
 
@@ -14,14 +13,13 @@ from .models import *
 menu = [{'title': "О сайте",
          'url_name': 'about'},
         {'title': "Добавить статью",
-         'url_name': 'add_news'}
-]
+         'url_name': 'add_news'}]
+
 
 class NewsTime(ListView):
     paginate_by = 5
     model = News
     template_name = 'news/index.html'
-
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -33,13 +31,6 @@ class NewsTime(ListView):
     def get_queryset(self):
         return News.objects.filter(is_published=True)
 
-#def index(request):
-#    posts = News.objects.all()
- #   tags = {'posts': posts,
-  #          'menu': menu,
-   #         'title': 'Главная страница',
-    #        'cat_selected': 0}
-    # return render(request, 'news/index.html', context=tags)
 
 class ShowNews(DetailView):
     model = News
@@ -52,6 +43,7 @@ class ShowNews(DetailView):
         context['menu'] = menu
         context['title'] = 'Главная страница'
         return context
+
 
 def about(request):
     return render(request, 'news/about.html', {'title': 'О сайте'})
@@ -72,9 +64,10 @@ class AddNews(CreateView):
         context['title'] = 'Добавление поста'
         return context
 
-#БЕДЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫ
+# БЕДЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫ
 
-def pageNotFound(requests, exception):
+
+def pageNotFound(requests):
     return HttpResponseNotFound('<p>Страница не найдена</p>')
 
 
@@ -94,6 +87,7 @@ class NewsCategory(ListView):
         context['menu'] = menu
         context['cat_selected'] = context['posts'][0].cat_id
         return context
+
 
 class RegisterUser(CreateView):
     form_class = RegisterUser
@@ -124,6 +118,7 @@ class LoginUser(LoginView):
 
     def get_success_url(self):
         return reverse_lazy('home')
+
 
 def logout_user(request):
     logout(request)
