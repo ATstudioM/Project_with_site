@@ -67,10 +67,6 @@ class AddNews(CreateView):
 # БЕДЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫЫ
 
 
-def pageNotFound(requests):
-    return HttpResponseNotFound('<p>Страница не найдена</p>')
-
-
 class NewsCategory(ListView):
     model = News
     paginate_by = 5
